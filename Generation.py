@@ -31,6 +31,7 @@ def random_type_A(nb_V ,nb_C, Pol):
     #vecteur referance avec bernouilli 1/2 pour chaque candidat et son oppose V2
     V1 = np.random.binomial(1,0.5,size=nb_C) 
     V2 = 1 - V1
+   
 
     #on va creer ensuite nos vecteur de parametres bernoullis avec l'argument de polarisation
     
@@ -43,7 +44,6 @@ def random_type_A(nb_V ,nb_C, Pol):
     N1 = nb_V - N2
     
     profil = []
-
     #on remarque pour pol=1/2, notre bias vers V1 ou V2 sont totalement supprimees car tout les
     #parametres sont a 1/2 pour P1 et P2. donc on tire totalement aleatoirement
     
