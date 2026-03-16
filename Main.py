@@ -13,3 +13,5 @@ import matplotlib.pyplot as plt
 print("Numpy :",np.__version__, " chez P: 2.0.1")
 print("matplotlib",  plt.matplotlib.__version__, "chez P: 3.10.0")
 print("Python", sys.version[:8], " Chez P: 3.11.13") #apres 8 dans la chaine il y a des info non utiles
+
+print(np.random.permutation(np.arange(1,10+1)))
