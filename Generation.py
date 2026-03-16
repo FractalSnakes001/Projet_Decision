@@ -11,7 +11,7 @@ import numpy as np
 
 #l'idee est de d'abord gen un tableau referance aleatoire, ensuite si on tres polarisee on aura une 
 #proba elevee d'etre soit proche soit l'oppose. si on est pas du tout polarisee on la proba de notre referance est grande
-#Vecteur ref (V1): on est un vecteur de proba de bernoulli avec p 1/2, pour chaque ki dans {1...m}
+
 
 #le nom ne contient pas generation car faudra l'utiliser comme module donc Generation.random_type...
 def random_type_A(nb_V ,nb_C, Pol):
