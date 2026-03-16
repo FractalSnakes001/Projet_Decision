@@ -3,7 +3,7 @@
 import numpy as np 
 
 # pas d'accent sur mon clavier, desoler en avance (clavier ricain)
-# je vais essayer d'implementer la Docstring python
+# je vais essayer d'implementer la Docstring python comme cela Vscode nous affiche les infos des fonctions
 
 
 #On a N votantes  et M candidats, chaque votante est associe a son bulletin
@@ -13,17 +13,23 @@ import numpy as np
 #proba elevee d'etre soit proche soit l'oppose. si on est pas du tout polarisee on la proba de notre referance est grande
 #Vecteur ref (V1): on est un vecteur de proba de bernoulli avec p 1/2, pour chaque ki dans {1...m}
 
-def generation_random_typeA(nb_V ,nb_C, Pol):
+#le nom ne contient pas generation car faudra l'utiliser comme module donc Generation.random_type...
+def random_type_A(nb_V ,nb_C, Pol):
     """
     renvoie nb_V bulletins aleatoires type A de taille nb_C avec une Polarisation Pol
 
     Args:
-        nb_V (integer): nombre de bulletins a retouner
-        nb_C (integer): taille du bulletin
-        Pol (float): indice de polarisation dans [0,1], 1=max polarisee, 0= aucune polarisation
+        nb_V (int): Nombre de bulletins de vote a generer. Doit etre un entier positif.
+        nb_C (int): Nombre de candidats (taille de chaque bulletin). Doit etre un entier positif.
+        Pol (float): Indice de polarisation compris dans [0, 1]. 
+                     0.0 correspond a polarisation minimale.
+                     1.0 correspond a polarisation maximale.
+    Returns:
+        profil : liste (non Numpy) de bulletins donc N elements de A.
+
     """
     #vecteur referance avec bernouilli 1/2 pour chaque candidat et son oppose V2
-    V1 = np.rand.binomial(1,0.5,size=nb_C) 
+    V1 = np.random.binomial(1,0.5,size=nb_C) 
     V2 = 1 - V1
 
     #on va creer ensuite nos vecteur de parametres bernoullis avec l'argument de polarisation
@@ -53,14 +59,19 @@ def generation_random_typeA(nb_V ,nb_C, Pol):
     # On retourne le profil complet (élément de A^n) [cite: 29]
     return profil
 
-def generation_random_typeL(nb_V, nb_C, Pol):
+def random_type_L(nb_V, nb_C, Pol):
     """
    renvoie nb_V bulletins aleatoires type L de taille nb_C avec une Polarisation Pol
 
     Args:
-        nb_V (integer): nombre de bulletins a retouner
-        nb_C (integer): taille du bulletin
-        Pol (float): indice de polarisation dans [0,1], 1=max polarisee, 0= aucune polarisation
+        nb_V (int): Nombre de bulletins de vote a generer. Doit etre un entier positif.
+        nb_C (int): Nombre de candidats (taille de chaque bulletin). Doit etre un entier positif.
+        Pol (float): Indice de polarisation compris dans [0, 1]. 
+                     0.0 correspond a polarisation minimale.
+                     1.0 correspond a polarisation maximale.
+    Returns:
+        profil : liste (non Numpy) de bulletins donc N elements de L.
+
     """
     # 1. Vecteur de reference V1 (rangs de 1 a m)
     V1 = np.random.permutation(np.arange(1, nb_C + 1))
