@@ -38,7 +38,7 @@ def NombrePreferance(profilA,K,L,M=None,Type='A'):
 
 
 
-def get_PolarDistances(profil,Type='A'):
+def get_Inner_PolarDistances(profil,Type='A'):
     """
     renvoie les distances  pour tout les couples de bulletins type A OU L
 
@@ -54,6 +54,9 @@ def get_PolarDistances(profil,Type='A'):
     #Comme on a besoin de la condition Bv[i] >  Bv[k].
     #on doit parcourir pour tous les couple lors du calcul, je ne vois pas comment
     #faire moins de complexite
+
+    #Remarque plus tard: avec numpy on aurait pu ecraser le souci car on peut test sur toute la colone d'un seul coup.
+
     if (Type != 'A' and Type != 'L'):
         return None
     
@@ -76,6 +79,7 @@ def get_PolarDistances(profil,Type='A'):
             distance = abs(Pk_L - Pl_K)
             result.append((distance,Couple))
     return result
+
             
 
             

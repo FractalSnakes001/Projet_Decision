@@ -24,6 +24,6 @@ List = Generation.random_type_L(15,8,0.2)
 for i in List:
     print(i)
 print("PolarisationDistance: ")
-List = Polar.get_PolarDistances(List)
+List = Polar.get_Inner_PolarDistances(List)
 for i in List:
     print(i)
