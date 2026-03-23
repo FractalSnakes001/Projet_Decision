@@ -1,4 +1,4 @@
-#Excercie 3
+#question 3 et  8 
 #desoler tjr pas d'accents car clavier ricain.
 #je separe distance et Nb de preferances car peut-etre utile plus tard
 #je continue a utiliser la Docstring pour les fonctions, j'espere que c'est plus clair pour tout le monde.
@@ -81,6 +81,46 @@ def get_Inner_PolarDistances(profil,Type='A'):
     return result
 
             
+def Distance_Bulletins_A(B1,B2):
+    """
+    Calcule la distance de Hamming entre deux bulletins pour Type A
 
+    Args:
+        B1 (list): bulletin (type A)
+        B2 (list): Deuxième (type A)
+
+    Returns:
+            - Nombre de positions differents (distance).
+            - None si erreur (vides/taille incompatible).
+    """
+    M1,M2= len(B1),len(B2)
+    if M1==0 or M2==0 or (M1 != M2) :
+        return None
+    res=0
+    for i in range(0,M1):
+        if B1[i] != B2[i]:
+            res+=1
+    return res
+    
+def Distance_Bulletins_L(B1,B2):
+    """
+    Calcule la distance Spearmann. pour bulletins type L
+
+    Args:
+        B1 (list): bulletin (type L).
+        B2 (list): bulletin (type L).
+
+    Returns:
+        int | float | None:
+            - Somme des differences abs (distance)
+            - None si erreur (vides/taille incompatible).
+    """
+    M1,M2= len(B1),len(B2)
+    if M1==0 or M2==0 or (M1 != M2) :
+        return None
+    res=0
+    for i in range(0,M1):  #faisable en Zip + Sum 
+        res+= abs(B1[i]-B2[i])
+    return res
             
         
