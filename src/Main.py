@@ -10,6 +10,8 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import Generation as Generation 
+import Polarisation as Polar
+
 
 print("Numpy :",np.__version__, " chez P: 2.0.1")
 print("matplotlib",  plt.matplotlib.__version__, "chez P: 3.10.0")
@@ -18,6 +20,10 @@ print("Python", sys.version[:8], " Chez P: 3.11.13") #apres 8 dans la chaine il 
 
 #tests, les gen fonctionnent pour pol=0,1,1/2 
 print(np.random.permutation(np.arange(1,10+1)))
-List = Generation.random_type_L(15,8,0.1)
+List = Generation.random_type_L(15,8,0.2)
+for i in List:
+    print(i)
+print("PolarisationDistance: ")
+List = Polar.get_PolarDistances(List)
 for i in List:
     print(i)
