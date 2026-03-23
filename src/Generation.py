@@ -21,9 +21,7 @@ def random_type_A(nb_V ,nb_C, Pol):
     Args:
         nb_V (int): Nombre de bulletins de vote a generer. Doit etre un entier positif.
         nb_C (int): Nombre de candidats (taille de chaque bulletin). Doit etre un entier positif.
-        Pol (float): Indice de polarisation compris dans [0, 1]. 
-                     0.0 correspond a polarisation minimale.
-                     1.0 correspond a polarisation maximale.
+        Pol (float): Pol (float): Indice de polarisation dans [0,1], où 0.0 = polarisation minimale et 1.0 = maximale.
     Returns:
         profil : liste (non Numpy) de bulletins donc N elements de A.
 
@@ -66,9 +64,7 @@ def random_type_L(nb_V, nb_C, Pol):
     Args:
         nb_V (int): Nombre de bulletins de vote a generer. Doit etre un entier positif.
         nb_C (int): Nombre de candidats (taille de chaque bulletin). Doit etre un entier positif.
-        Pol (float): Indice de polarisation compris dans [0, 1]. 
-                     0.0 correspond a polarisation minimale.
-                     1.0 correspond a polarisation maximale.
+        Pol (float): Pol (float): Indice de polarisation dans [0,1], où 0.0 = polarisation minimale et 1.0 = maximale.
     Returns:
         profil : liste (non Numpy) de bulletins donc N elements de L.
 
