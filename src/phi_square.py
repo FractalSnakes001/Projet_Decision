@@ -1,6 +1,6 @@
 from math import comb
 
-# Question 4
+# Question 5
 
 def computePhiSquare_A(profile):
     """Fonction qui calcule φ^2(p) sachant un profil p de A^n
