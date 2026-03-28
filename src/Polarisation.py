@@ -116,8 +116,11 @@ def Calcul_U2_TypeA(profilA, max_iter=50):
         - (int, tuple): (u2_etoile, (centre1, centre2))
         - None si erreur.
     """
-    N,M = len(profilA)==0, len(profilA[0])
-    if N==0 or M < 2:
+    if not profilA or len(profilA) == 0:
+        return None, None
+    
+    N, M = len(profilA), len(profilA[0])
+    if M < 2:
         return None, None
     
     # 2 bulletins distincts au hasard,pol=1 force distincts
@@ -140,7 +143,7 @@ def Calcul_U2_TypeA(profilA, max_iter=50):
                 
         #cas vide
         if not p1 or not p2:
-            mid = len(profilA) // 2
+            mid = N // 2
             p1 = profilA[:mid]
             p2 = profilA[mid:]
             
@@ -176,8 +179,11 @@ def Calcul_U2_TypeL(profilL, max_iter=50):
         - tuple (int, tuple): (u2_etoile, (centre1, centre2))
         - None, None si erreur.
     """
-    N,M = len(profilL)==0, len(profilL[0])
-    if N==0 or M < 2:
+    if not profilL or len(profilL) == 0:
+        return None, None
+    
+    N, M = len(profilL), len(profilL[0])
+    if M < 2:
         return None, None
     
     # 2 bulletins distincts au hasard,pol=1 force distincts
@@ -199,7 +205,7 @@ def Calcul_U2_TypeL(profilL, max_iter=50):
                 
         # pour les groupes vides
         if not p1 or not p2:
-            mid = len(profilL) // 2
+            mid = N // 2
             p1 = profilL[:mid]
             p2 = profilL[mid:]
             
