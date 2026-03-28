@@ -53,7 +53,7 @@ def Calcul_U1_TypeA(profilA):
 def Calcul_U1_TypeL(profilL):
     """
     Calcule le score de consensus u1*(p) pour un profil de type L 
-    en construisant la matrice des couts et en utilisant l'algorithme Hongrois.
+    en construisant la matrice des couts et en utilisant l'algorithme Hongrois. Scipy
 
     Args:
         profilL : profil contenant n bulletins type L de m candidats.
@@ -87,8 +87,8 @@ def Calcul_U1_TypeL(profilL):
                 cout += abs(bull[c] - rang)
             W[c, j_id] = cout
 
-    # Res du probleme d'affectation 
-    # row_ind correspond aux candidats, col_ind aux indices des rangs affectes
+    # Resol du probleme d'affectation 
+    # row_ind correspond aux candidats, col_ind aux indices des rangs 
     row_ind, col_ind = linear_sum_assignment(W)
 
     # Calcul du cout total u1*(p) 
