@@ -1,19 +1,23 @@
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 
+# tjr pas d'accent sur mon clavier, desoler en avance (clavier ricain)
+# je vais essayer d'implementer la Docstring python comme cela Vscode nous affiche les infos des fonctions
+
+
 def Calcul_U1_TypeA(profilA):
     """
     Calcule le score de consensus u1*(p) pour un profil de type A 
     en utilisant la regle de la majorite coordonnee par coordonnee.
 
     Args:
-        profilA (list of list): profil de type A contenant n bulletins.
+        profilA : profil de type A contenant n bulletins.
 
     Returns:
-        - tuple (int, list): (u1_etoile, bulletin_consensus)
+        - (int, list): (u1_etoile, bulletin_consensus)
         - None si erreur.
     """
-    if not profilA or len(profilA) == 0:
+    if len(profilA) == 0:
         return None
     
     N = len(profilA)
@@ -24,7 +28,7 @@ def Calcul_U1_TypeA(profilA):
     consensus = []
     u1 = 0
 
-    # On evalue chaque candidat de maniere independante
+    # On evalue chaque candidat de maniere inde
     for i in range(M):
         # On compte le nombre de votants ayant approuve (1) ce candidat
         nb_1 = sum(bull[i] for bull in profilA)
@@ -49,38 +53,38 @@ def Calcul_U1_TypeL(profilL):
     en construisant la matrice des couts et en utilisant l'algorithme Hongrois.
 
     Args:
-        profilL (list de list): profil contenant n bulletins de m candidats.
-                                Chaque bulletin contient le rang de chaque candidat.
+        profilL : profil contenant n bulletins type L de m candidats.
+                               
 
     Returns:
-        - tuple (int, list): (u1_etoile, bulletin_consensus)
+        - (int, list): (u1_etoile, bulletin_consensus)
         - None si erreur.
     """
-    if not profilL or len(profilL) == 0:
-        return None, None
-    
+    if  len(profilL) == 0:
+        return None
+        
     N = len(profilL)
     M = len(profilL[0])
-    if M == 0:
+    if M == 0 or N==0:
         return None
 
     # On recupere les rangs possibles 
     rangs_possibles = sorted(profilL[0])
 
-    # 1. Creation de la matrice des couts W de taille M x M
+    # Creation de la matrice des couts W de taille M x M
     # Lignes  = candidats, Colonnes  = rangs possibles
     W = np.zeros((M, M))
 
     for c in range(M): 
         for j_id in range(M): 
-            rang_cible = rangs_possibles[j_id]
+            rang = rangs_possibles[j_id]
             cout = 0
             # W[c, j] = Somme des distances de Spearman si on donne le rang cible au candidat c
             for bull in profilL:
-                cout += abs(bull[c] - rang_cible)
+                cout += abs(bull[c] - rang)
             W[c, j_id] = cout
 
-    # Resolution du probleme d'affectation 
+    # Res du probleme d'affectation 
     # row_ind correspond aux candidats, col_ind aux indices des rangs affectes
     row_ind, col_ind = linear_sum_assignment(W)
 
