@@ -45,7 +45,7 @@ def Calcul_U1_TypeA(profilA):
 
 def Calcul_U1_TypeL(profilL):
     """
-    Calcule le score de consensus u1*(p) pour un profil de type L (ordres totaux)
+    Calcule le score de consensus u1*(p) pour un profil de type L 
     en construisant la matrice des couts et en utilisant l'algorithme Hongrois.
 
     Args:
@@ -54,7 +54,7 @@ def Calcul_U1_TypeL(profilL):
 
     Returns:
         - tuple (int, list): (u1_etoile, bulletin_consensus)
-        - None, None si erreur.
+        - None si erreur.
     """
     if not profilL or len(profilL) == 0:
         return None, None
@@ -62,36 +62,35 @@ def Calcul_U1_TypeL(profilL):
     N = len(profilL)
     M = len(profilL[0])
     if M == 0:
-        return None, None
+        return None
 
-    # On recupere les rangs possibles (generalement 1 a M)
-    # trier le premier bulletin permet d'etre agnostique (si indexe a 0 ou 1)
+    # On recupere les rangs possibles 
     rangs_possibles = sorted(profilL[0])
 
     # 1. Creation de la matrice des couts W de taille M x M
-    # Lignes (c) = candidats, Colonnes (j) = rangs possibles
+    # Lignes  = candidats, Colonnes  = rangs possibles
     W = np.zeros((M, M))
 
     for c in range(M): 
-        for j_idx in range(M): 
-            rang_cible = rangs_possibles[j_idx]
+        for j_id in range(M): 
+            rang_cible = rangs_possibles[j_id]
             cout = 0
             # W[c, j] = Somme des distances de Spearman si on donne le rang cible au candidat c
             for bull in profilL:
                 cout += abs(bull[c] - rang_cible)
-            W[c, j_idx] = cout
+            W[c, j_id] = cout
 
-    # 2. Resolution du probleme d'affectation (Algorithme Hongrois)
+    # Resolution du probleme d'affectation 
     # row_ind correspond aux candidats, col_ind aux indices des rangs affectes
     row_ind, col_ind = linear_sum_assignment(W)
 
-    # 3. Calcul du cout total u1*(p) associe a cette affectation optimale
-    u1_etoile = W[row_ind, col_ind].sum()
+    # Calcul du cout total u1*(p) 
+    u1_e = W[row_ind, col_ind].sum()
 
-    # 4. Reconstitution du bulletin de consensus
+   
     # consensus[c] correspond au rang attribue au candidat c
     consensus = [0] * M
     for c, j_idx in zip(row_ind, col_ind):
         consensus[c] = rangs_possibles[j_idx]
 
-    return int(u1_etoile), consensus
+    return int(u1_e), consensus
