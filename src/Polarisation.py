@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 import Generation as gen
@@ -5,7 +6,7 @@ import Distances as ds
 
 # tjr pas d'accent sur mon clavier, desoler en avance (clavier ricain)
 # je vais essayer d'implementer la Docstring python comme cela Vscode nous affiche les infos des fonctions
-#Exercice 12-13
+#Exercice 12-13-14-15
 
 def Calcul_U1_TypeA(profilA):
     """
@@ -95,8 +96,8 @@ def Calcul_U1_TypeL(profilL):
 
    
     # consensus[c] correspond au rang attribue au candidat c
-    consensus = [0] * M
-    for c, j_idx in zip(row_ind, col_ind):
+    consensus = [0 for _ in range(M)]
+    for c, j_idx in zip(row_ind, col_ind): #pour iterer au meme temps
         consensus[c] = rangs_possibles[j_idx]
 
     return int(u1_e), consensus
@@ -105,8 +106,7 @@ def Calcul_U1_TypeL(profilL):
 #on reprend un squellete fait dans un tp de donnes, mis a jour a pour notre cas
 def Calcul_U2_TypeA(profilA, max_iter=50):
     """
-    Calcule le score u2*(p) pour un profil de type A en utilisant 
-    un algorithme K-means (K=2) avec la distance de Hamming.
+    Calcule le score u2*(p) pour un profil de type A avec algorithme K-means (K=2) et la distance de Hamming.
 
     Args:
         profilA : profil de type A contenant n bulletins.
@@ -168,12 +168,12 @@ def Calcul_U2_TypeA(profilA, max_iter=50):
 #on apllique juste k means aussi
 def Calcul_U2_TypeL(profilL, max_iter=50):
     """
-    Calcule le score u2*(p) pour un profil de type L en utilisant 
-    un algorithme K-means (K=2) avec la distance de Spearman.
+    Calcule le score u2*(p) pour un profil de type L avec 
+    un algorithme K-means (K=2) et la distance de Spearman.
 
     Args:
-        profilL (list of list): profil de type L contenant n bulletins.
-        max_iter (int): nombre maximum d'iterations pour eviter une boucle infinie.
+        profilL : profil de type L contenant n bulletins.
+        max_iter : nombre maximum d'iterations pour eviter une boucle infinie.
 
     Returns:
         - tuple (int, tuple): (u2_etoile, (centre1, centre2))
@@ -222,3 +222,150 @@ def Calcul_U2_TypeL(profilL, max_iter=50):
         
     u2_etoile = score1 + score2
     return u2_etoile, (c1, c2)
+
+
+#pour la question 14, il suffit d'appliquer la formule de polarisation
+def Polarisation_TypeA(profilA, max_iter=50):
+    """
+    Calcule la mesure de polarisation  pour un profil de type A.
+
+    Args:
+        profilA : profil de type A contenant n bulletins.
+        max_iter : nombre maximum d'iterations pour le K-means de u2*. default 50
+
+    Returns:
+        - float: score de polarisation compris entre 0.0 et 1.0.
+        - None si erreur.
+    """
+    if not profilA or len(profilA) == 0:
+        return None
+    
+    N, M = len(profilA), len(profilA[0])
+    if M < 2:
+        return None
+        
+    # Calcul de u1* 
+    # Calcul_U1 renvoie (score, bulletin), on ne garde que l'indice 0
+    u1_res = Calcul_U1_TypeA(profilA)
+    if u1_res[0] is None:
+        return None
+    u1_etoile = u1_res[0]
+    
+    # Calcul de u2* (cout du consensus divise en 2 camps)
+    u2_res = Calcul_U2_TypeA(profilA, max_iter)
+    if u2_res[0] is None:
+        return None
+    u2_etoile = u2_res[0]
+    
+    # Application de la formule
+    phi = (2.0 / (N * M)) * (u1_etoile - u2_etoile)
+    
+    return phi
+
+#question 15 affichage final:
+def Polarisation_TypeL(profilL, max_iter=50):
+    """
+    Calcule la mesure de polarisation globale pour un profil de type L .
+
+    Args:
+        profilL : profil de type L contenant n bulletins.
+        max_iter : nombre maximum d'iterations pour le K-means de u2*.
+
+    Returns:
+        - float: score de polarisation compris entre 0.0 et 1.0.
+        - None si erreur.
+    """
+    if not profilL or len(profilL) == 0:
+        return None
+    
+    N, M = len(profilL), len(profilL[0])
+    if M < 2:
+        return None
+        
+    # 1. Calcul de u1* via le graphe biparti (Hongrois)
+    u1_res = Calcul_U1_TypeL(profilL)
+    if u1_res[0] is None:
+        return None
+    u1_etoile = u1_res[0]
+    
+    # 2. Calcul de u2* via K-means sur la distance de Spearman
+    u2_res = Calcul_U2_TypeL(profilL, max_iter)
+    if u2_res[0] is None:
+        return None
+    u2_etoile = u2_res[0]
+    
+    # 3. Application de la formule mathematique
+    phi = (4.0 / (N * M * M)) * (u1_etoile - u2_etoile)
+    
+    return phi
+
+#question 15 affichage final:
+def Evaluer_Polarisation(N=100, M=10, pas=0.05, nb_simuls=10):
+    """
+    Evalue et affiche l'evolution de la mesure de polarisation, selon la polarisation utilisee dans Generations.py 
+
+    Args:
+        N (int): Nombre de votantes (taille du profil).
+        M (int): Nombre de candidats.
+        pas (float): Pas d'incrementation pour le parametre Pol (entre 0.0 et 1.0).
+        nb_simuls (int): Nombre de profils generes par etape pour diminuer la varience
+
+    Returns:
+        -void si ok
+        -None si erreur
+    """
+    if pas <= 0 or N < 2 or M < 2:
+        return None
+
+    pol_inputs = np.arange(0.0, 1.0 + pas , pas)
+    
+    resultats_A = []
+    resultats_L = []
+
+    
+    for p in pol_inputs:
+        somme_phi_A = 0.0
+        somme_phi_L = 0.0
+        
+        for _ in range(nb_simuls):
+            # Gen des profils 
+            profil_A = gen.random_type_A(N, M, p)
+            profil_L = gen.random_type_L(N, M, p)
+            
+            #Calcul des polarisations 
+            phi_A = Polarisation_TypeA(profil_A)
+            phi_L = Polarisation_TypeL(profil_L)
+            
+            #Secu car renvois None si erreur
+            somme_phi_A += phi_A if phi_A is not None else 0
+            somme_phi_L += phi_L if phi_L is not None else 0
+            
+        # 3. Moyenne des resultats 
+        resultats_A.append(somme_phi_A / nb_simuls)
+        resultats_L.append(somme_phi_L / nb_simuls)
+        
+    print("Evaluation terminee. Generation du graphique..")
+
+    # Creation du graphique avec Matplotlib
+    # ==========================================
+    plt.figure(figsize=(10, 6))
+    
+    # Courbes des resultats
+    plt.plot(pol_inputs, resultats_A, marker='o', linestyle='-', color='blue', label='Type A')
+    plt.plot(pol_inputs, resultats_L, marker='x', linestyle='-', color='red', label='Type L')
+    
+    # Ligne de reference  y = x (Pol injectee = Pol mesuree)
+    plt.plot([0, 1], [0, 1], 'k--', label='Reference  (y=x)')
+    
+    plt.title("Evolution de la Polarisation Mesuree vs Polarisation de generation\n(N="+str(N)+" votantes, M="+str(M)+" candidats, "+str(nb_simuls)+" simuls/point)")
+    plt.xlabel("Parametre 'Pol' de  generation")
+    plt.ylabel("Mesure de polarisation calculee (Phi)")
+    plt.xlim(0, 1.05)
+    plt.ylim(0, 1.05)
+    plt.legend()
+    plt.grid(True, linestyle='--', alpha=0.7)
+    #force d'avoir le 0.5 pour montrer que purement aleatoire != polarisation mesuree =0.5
+    plt.xticks(np.arange(0.0, 1.1, 0.1)) 
+    # Affichage
+    plt.show()
+    return 

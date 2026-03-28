@@ -10,7 +10,9 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import Generation as Generation 
-import Projet_Decision.src.Distances as Polar
+import Distances as Ds
+import Polarisation as Polar
+
 
 
 print("Numpy :",np.__version__, " chez P: 2.0.1")
@@ -24,6 +26,14 @@ List = Generation.random_type_L(15,8,0.2)
 for i in List:
     print(i)
 print("PolarisationDistance: ")
-List = Polar.get_Inner_PolarDistances(List)
+List = Ds.get_Inner_PolarDistances(List)
 for i in List:
     print(i)
+
+
+Polar.Evaluer_Polarisation(200,15)
+
+
+
+
+

@@ -46,7 +46,7 @@ def get_Inner_PolarDistances(profil,Type='A'):
        profilA: une liste de bulletin de type A, ou de type L 
        Type : 'A' ou 'L' pour le type de profil, par defaut 'A'
     Returns:
-       - Liste de tuples (a,b) avec a la distance pour le couple b de profils, a(int),  b(int tuple)
+       - list tuples (a,b): a(int);b(int tuple)  a= distance pour le couple b de profils
         avec le tuple de b correspondant aux indices des candidats (indice liste)
        - None s'il y a une erreur
 
@@ -90,7 +90,7 @@ def Distance_Bulletins_A(B1,B2):
         B2 (list): Deuxième (type A)
 
     Returns:
-            - Nombre de positions differents (distance).
+            - (int): Nombre de positions differents (distance).
             - None si erreur (vides/taille incompatible).
     """
     M1,M2= len(B1),len(B2)
@@ -111,15 +111,14 @@ def Distance_Bulletins_L(B1,B2):
         B2 (list): bulletin (type L).
 
     Returns:
-        int | float | None:
-            - Somme des differences abs (distance)
+            - (int): Somme des differences abs (distance)
             - None si erreur (vides/taille incompatible).
     """
     M1,M2= len(B1),len(B2)
     if M1==0 or M2==0 or (M1 != M2) :
         return None
     res=0
-    for i in range(0,M1):  #faisable en Zip + Sum 
+    for i in range(0,M1): 
         res+= abs(B1[i]-B2[i])
     return res
             
