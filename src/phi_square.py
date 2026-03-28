@@ -1,6 +1,8 @@
 from math import comb
 import numpy as np 
 import matplotlib.pyplot as plt
+import Projet_Decision.src.Distances as ds
+
 
 # Question 5 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -14,7 +16,7 @@ def computePhiSquare_A(profile):
         mesure de polarisation φ^2 du profil en paramètre
     
     """
-    it = get_Inner_PolarDistances(profile, Type='A')
+    it = ds.get_Inner_PolarDistances(profile, Type='A')
     phi_sq = 0
     n = len(profile)
     m = len(profile[0])
@@ -33,7 +35,7 @@ def computePhiSquare_L(profile):
         mesure de polarisation φ^2 du profil en paramètre
     
     """
-    it = get_Inner_PolarDistances(profile, Type='L')
+    it = ds.get_Inner_PolarDistances(profile, Type='L')
     phi_sq = 0
     n = len(profile)
     m = len(profile[0])
@@ -56,7 +58,7 @@ def evol_phi_square_A(n, m):
     pol_values = []
     for i in range(11):
         pol = i / 10
-        profile = random_type_A(n, m, pol)
+        profile = ds.random_type_A(n, m, pol)
         phi_square.append(computePhiSquare_A(profile))
         pol_values.append(pol)
     plt.figure()
@@ -79,7 +81,7 @@ def evol_phi_square_L(n, m):
     pol_values = []
     for i in range(11):
         pol = i / 10
-        profile = random_type_L(n, m, pol)
+        profile = ds.random_type_L(n, m, pol)
         phi_square.append(computePhiSquare_L(profile))
         pol_values.append(pol)
     plt.figure()

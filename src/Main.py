@@ -10,7 +10,7 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import Generation as Generation 
-import Polarisation as Polar
+import Projet_Decision.src.Distances as Polar
 
 
 print("Numpy :",np.__version__, " chez P: 2.0.1")
