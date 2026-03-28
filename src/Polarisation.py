@@ -1,9 +1,11 @@
 import numpy as np
 from scipy.optimize import linear_sum_assignment
+import Generation as gen
+import Distances as ds
 
 # tjr pas d'accent sur mon clavier, desoler en avance (clavier ricain)
 # je vais essayer d'implementer la Docstring python comme cela Vscode nous affiche les infos des fonctions
-
+#Exercice 12-13
 
 def Calcul_U1_TypeA(profilA):
     """
@@ -18,12 +20,12 @@ def Calcul_U1_TypeA(profilA):
         - None si erreur.
     """
     if len(profilA) == 0:
-        return None
+        return None,None
     
     N = len(profilA)
     M = len(profilA[0])
     if M == 0:
-        return None
+        return None,None
 
     consensus = []
     u1 = 0
@@ -61,7 +63,7 @@ def Calcul_U1_TypeL(profilL):
         - None si erreur.
     """
     if  len(profilL) == 0:
-        return None
+        return None,None
         
     N = len(profilL)
     M = len(profilL[0])
@@ -98,3 +100,119 @@ def Calcul_U1_TypeL(profilL):
         consensus[c] = rangs_possibles[j_idx]
 
     return int(u1_e), consensus
+
+#on apllique juste k means
+#on reprend un squellete fait dans un tp de donnes, mis a jour a pour notre cas
+def Calcul_U2_TypeA(profilA, max_iter=50):
+    """
+    Calcule le score u2*(p) pour un profil de type A en utilisant 
+    un algorithme K-means (K=2) avec la distance de Hamming.
+
+    Args:
+        profilA : profil de type A contenant n bulletins.
+        max_iter (int): nombre maximum d'iterations pour eviter une boucle infinie. default 50
+
+    Returns:
+        - (int, tuple): (u2_etoile, (centre1, centre2))
+        - None si erreur.
+    """
+    N,M = len(profilA)==0, len(profilA[0])
+    if N==0 or M < 2:
+        return None, None
+    
+    # 2 bulletins distincts au hasard,pol=1 force distincts
+    Brd = gen.random_type_A(2,M,1)
+    c1 = Brd[0]
+    c2 = Brd[1]
+    
+    for _ in range(max_iter):
+        p1 = []
+        p2 = []
+        
+        # on place chaque votant dans le groupe le plus proche
+        for bull in profilA:
+            d1 = ds.Distance_Bulletins_A(bull, c1)
+            d2 = ds.Distance_Bulletins_A(bull, c2)
+            if d1 < d2:
+                p1.append(bull)
+            else:
+                p2.append(bull)
+                
+        #cas vide
+        if not p1 or not p2:
+            mid = len(profilA) // 2
+            p1 = profilA[:mid]
+            p2 = profilA[mid:]
+            
+        #  mise a jour : on recalcule les centres optimaux 
+        score1, nv_c1 = Calcul_U1_TypeA(p1)
+        score2, nv_c2 = Calcul_U1_TypeA(p2)
+        
+        if c1 == nv_c1 and c2 == nv_c2:
+            break
+            
+        c1 = nv_c1
+        c2 = nv_c2
+        
+    # Le score u2* est la somme des u1* des deux sous-groupes finaux
+    u2_etoile = score1 + score2
+    return u2_etoile, (c1, c2)
+
+
+
+
+
+#on apllique juste k means aussi
+def Calcul_U2_TypeL(profilL, max_iter=50):
+    """
+    Calcule le score u2*(p) pour un profil de type L en utilisant 
+    un algorithme K-means (K=2) avec la distance de Spearman.
+
+    Args:
+        profilL (list of list): profil de type L contenant n bulletins.
+        max_iter (int): nombre maximum d'iterations pour eviter une boucle infinie.
+
+    Returns:
+        - tuple (int, tuple): (u2_etoile, (centre1, centre2))
+        - None, None si erreur.
+    """
+    N,M = len(profilL)==0, len(profilL[0])
+    if N==0 or M < 2:
+        return None, None
+    
+    # 2 bulletins distincts au hasard,pol=1 force distincts
+    Brd = gen.random_type_L(2,M,1)
+    c1 = Brd[0]
+    c2 = Brd[1]
+    
+    for x in range(max_iter):
+        p1 = []
+        p2 = []
+        
+        for bull in profilL:
+            d1 = ds.Distance_Bulletins_L(bull, c1)
+            d2 = ds.Distance_Bulletins_L(bull, c2)
+            if d1 < d2:
+                p1.append(bull)
+            else:
+                p2.append(bull)
+                
+        # pour les groupes vides
+        if not p1 or not p2:
+            mid = len(profilL) // 2
+            p1 = profilL[:mid]
+            p2 = profilL[mid:]
+            
+        #mise a jour (via  Algo Hongrois de la Q11)
+        score1, nv_c1 = Calcul_U1_TypeL(p1)
+        score2, nv_c2 = Calcul_U1_TypeL(p2)
+        
+        # 4. Condition d'arret
+        if c1 == nv_c1 and c2 == nv_c2:
+            break
+            
+        c1 = nv_c1
+        c2 = nv_c2
+        
+    u2_etoile = score1 + score2
+    return u2_etoile, (c1, c2)
