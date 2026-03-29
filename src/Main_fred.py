@@ -75,7 +75,7 @@ def listp():
         print(f"Profile {i}. Type: {p.type} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
 
 def show():
-    print("Profile number: ", end="")
+    print("Profile index: ", end="")
     index = int(input())
 
     if index >= len(profiles) or 0 > index:
@@ -83,14 +83,14 @@ def show():
         return
 
     p = profiles[index]
-    print(f"Profile {index}. Type: {"APPROVAL" if p.type == "a" else "ORDRE TOTAL"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
+    print(f"Profile {index}. Type: {"APPROVAL" if p.type == "a" else "TOTAL ORDERING"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
     for v in p.data:
         for c in v:
             print(c, end=" ")
         print()
 
 def candidatedistance():
-    print("Profile number: ", end="")
+    print("Profile index: ", end="")
     index = int(input())
     if index >= len(profiles) or 0 > index:
         print("Error: wrong argument(s). Index out of range.")
@@ -105,7 +105,7 @@ def candidatedistance():
         print(c1, " "*14, c2, " "*14, distance, sep="")
 
 def phisquare():
-    print("Profile number: ", end="")
+    print("Profile index: ", end="")
     index = int(input())
     if index >= len(profiles) or 0 > index:
         print("Error: wrong argument(s). Index out of range.")
@@ -129,7 +129,7 @@ def evolphisquare():
     evol_phi_square_A(v, c) if t == "A" else evol_phi_square_L(v, c)
 
 def hamming():
-    print("Profile number: ", end="")
+    print("Profile index: ", end="")
     index = int(input())
     if index >= len(profiles) or 0 > index:
         print("Error: wrong argument(s). Index out of range.")
@@ -154,6 +154,32 @@ def hamming():
 
     print(f"Hamming distance: {distance}")
 
+def spearman():
+    print("Profile index: ", end="")
+    index = int(input())
+    if index >= len(profiles) or 0 > index:
+        print("Error: wrong argument(s). Index out of range.")
+        return
+    
+    profile = profiles[index]
+
+    if profile.type != "l":
+        print("Error: the profile needs to be of type approval in order to compute Spearman distances in it.")
+        return
+
+    print("First ballot index ? ", end="")
+    b1 = int(input())
+    print("Second ballot index ? ", end="")
+    b2 = int(input())
+
+    if b1 < 0 or b2 < 0 or b1 >= profile.v or b2 >= profile.v:
+        print("Error: wrong argument(s). Index out of range.")
+        return    
+
+    distance = Distance_Bulletins_L(profile.data[b1], profile.data[b2])
+
+    print(f"Spearman distance: {distance}")
+
 operations = {
     "help": help,
     "reset": reset,
@@ -164,6 +190,7 @@ operations = {
     "phisquare": phisquare,
     "evolphisquare": evolphisquare,
     "hamming": hamming,
+    "spearman": spearman,
     "exit": None
 }
 
@@ -177,6 +204,7 @@ descriptions = {
     "phisquare": "Compute the phi square distance of a profile as defined in question 5.",
     "evolphisquare": "Graph the evolution of the Phi² polarisation measure as a function of our own polarisation generation parameter.",
     "hamming": "Compute the Hamming distance between two ballots of an approval profile.",
+    "spearman": "Compute the Spearman distance between two ballots of a total ordering profile.",
     "exit": "Exit the menu, stop the program."
 }
 
