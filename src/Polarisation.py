@@ -344,7 +344,7 @@ def Evaluer_Polarisation(N=100, M=10, pas=0.05, nb_simuls=10):
         resultats_A.append(somme_phi_A / nb_simuls)
         resultats_L.append(somme_phi_L / nb_simuls)
         
-    print("Evaluation terminee. Generation du graphique..")
+    # print("Evaluation terminee. Generation du graphique..")
 
     # Creation du graphique avec Matplotlib
     # ==========================================

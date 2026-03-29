@@ -184,6 +184,20 @@ def polarisation():
     result = Polarisation_TypeA(profile.data) if profile.type == "a" else Polarisation_TypeL(profile.data)
     print(f"Polarisation: {round(result, 2)}")
 
+def evolphi():
+    print("Candidate number ? ", end="")
+    c = int(input())
+    print("Voter number ? ", end="")
+    v = int(input())
+    print("Step ? ", end="")
+    s = float(input())
+    print("Tries by step number ? ", end="")
+    t = int(input())
+
+    if c < 1 or v < 1 or not (0 <= s and s <= 1) or t < 1:
+        print("Wrong argument(s).")
+
+    Evaluer_Polarisation(v, c, s, t)
 
 operations = {
     "help": help,
@@ -199,6 +213,7 @@ operations = {
     "consensus": consensus,
     "consensuscluster": consensuscluster,
     "polarisation": polarisation,
+    "evolphi": evolphi,
     "exit": None
 }
 
@@ -216,6 +231,7 @@ descriptions = {
     "consensus": "Compute the consensus, a ballot that minimizes its cumulated Hamming/Spearman distance to a profile.",
     "consensuscluster": "Compute an approximation of an optimal ballot pair, representing the best two profile clusters.",
     "polarisation": "Compute the final phi polarisation measure of a profile.",
+    "evolphi": "Graph the evolution of the Phi polarisation measure as a function of our own polarisation generation parameter, for both A/L type profiles.",
     "exit": "Exit the menu, stop the program."
 }
 
