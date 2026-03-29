@@ -86,7 +86,7 @@ def listp():
 
 def show():
     index, p = choose_profile()
-    print(f"Profile {index}. Type: {"APPROVAL" if p.type == "a" else "TOTAL ORDERING"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
+    print(f"Profile {index}. Type: {'APPROVAL' if p.type == 'a' else 'TOTAL ORDERING'} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
     for v in p.data:
         for c in v:
             print(c, end=" ")
