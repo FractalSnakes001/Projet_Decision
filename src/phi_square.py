@@ -2,6 +2,7 @@ from math import comb
 import numpy as np 
 import matplotlib.pyplot as plt
 import Distances as ds
+from Generation import *
 
 
 # Question 5 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ def evol_phi_square_A(n, m):
     pol_values = []
     for i in range(11):
         pol = i / 10
-        profile = ds.random_type_A(n, m, pol)
+        profile = random_type_A(n, m, pol)
         phi_square.append(computePhiSquare_A(profile))
         pol_values.append(pol)
     plt.figure()
@@ -81,7 +82,7 @@ def evol_phi_square_L(n, m):
     pol_values = []
     for i in range(11):
         pol = i / 10
-        profile = ds.random_type_L(n, m, pol)
+        profile = random_type_L(n, m, pol)
         phi_square.append(computePhiSquare_L(profile))
         pol_values.append(pol)
     plt.figure()
