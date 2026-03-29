@@ -3,8 +3,9 @@ import math
 import sys
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
-import Distances as Ds
+from itertools import combinations
 from Generation import *
+from Distances import *
 import Polarisation as Polar
 
 @dataclass
@@ -22,9 +23,14 @@ profiles = list()
 
 
 def help():
+    
+    max = -1
+    for s in descriptions:
+        max = len(s) if len(s) > max else max
+
     print("Permitted operations:")
     for (op, desc) in descriptions.items():
-        print("\t" + op + ": " + desc)
+        print("   " + " " * (max - len(op)) + op + " | " + desc)
 
 def reset():
     profiles.clear()
@@ -75,7 +81,7 @@ def show():
     print("Profile number: ", end="")
     index = int(input())
 
-    if index >= len(profiles):
+    if index >= len(profiles) or 0 > index:
         print("Error: wrong argument(s). Index out of range.")
         return
 
@@ -86,6 +92,20 @@ def show():
             print(c, end=" ")
         print()
 
+def candidatedistance():
+    print("Profile number: ", end="")
+    index = int(input())
+    if index >= len(profiles) or 0 > index:
+        print("Error: wrong argument(s). Index out of range.")
+        return
+
+    profile = profiles[index]
+    
+    print("Candidate A" + " " * 4 + "Candidate B" + " " * 4 + "Distance between A and B")
+
+    for (c1, c2) in combinations(range(1, profile.c + 1), 2):
+        distance = abs(NombrePreferance(profile.data, c1-1, c2-1, profile.v, profile.type.upper()) - NombrePreferance(profile.data, c2-1, c1-1, profile.v, profile.type.upper()))
+        print(c1, " "*14, c2, " "*14, distance, sep="")
 
 operations = {
     "help": help,
@@ -93,6 +113,7 @@ operations = {
     "profile": profile,
     "listprofiles": listprofiles,
     "show": show,
+    "candidatedistance": candidatedistance,
     "exit": None
 }
 
@@ -101,8 +122,9 @@ descriptions = {
     "reset": "Erase all previously saved profiles.",
     "profile": "Generate & save A or L profile with the wanted candidates, voters numbers & polarisation.",
     "listprofiles": "List the previously created profiles.",
-    "show": "Displays a particular saved profile.",
-    "exit": "Exits the menu, stops the program."
+    "show": "Display a particular saved profile.",
+    "candidatedistance": "Display the preference distance between every pair of candidate of a particular profile, as defined in question 3.",
+    "exit": "Exit the menu, stop the program."
 }
 
 def menu():
