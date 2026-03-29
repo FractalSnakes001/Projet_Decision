@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ### Lancer le programme principal
 ```bash
-python src/Main.py
+python src/main.py
 ```
 
 ---
