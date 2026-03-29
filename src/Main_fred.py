@@ -69,7 +69,7 @@ def profile():
     profiles.append(profile)
     print("Profile saved.")
 
-def listprofiles():
+def listp():
     for i in range(len(profiles)):
         p = profiles[i]
         print(f"Profile {i}. Type: {p.type} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
@@ -83,7 +83,7 @@ def show():
         return
 
     p = profiles[index]
-    print(f"Profile {index}. Type: { "APPROBATION" if p.type == "a" else "ORDRE TOTAL"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
+    print(f"Profile {index}. Type: {"APPROVAL" if p.type == "a" else "ORDRE TOTAL"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
     for v in p.data:
         for c in v:
             print(c, end=" ")
@@ -128,15 +128,42 @@ def evolphisquare():
     
     evol_phi_square_A(v, c) if t == "A" else evol_phi_square_L(v, c)
 
+def hamming():
+    print("Profile number: ", end="")
+    index = int(input())
+    if index >= len(profiles) or 0 > index:
+        print("Error: wrong argument(s). Index out of range.")
+        return
+    
+    profile = profiles[index]
+
+    if profile.type != "a":
+        print("Error: the profile needs to be of type approval in order to compute Hamming distances in it.")
+        return
+
+    print("First ballot index ? ", end="")
+    b1 = int(input())
+    print("Second ballot index ? ", end="")
+    b2 = int(input())
+
+    if b1 < 0 or b2 < 0 or b1 >= profile.v or b2 >= profile.v:
+        print("Error: wrong argument(s). Index out of range.")
+        return    
+
+    distance = Distance_Bulletins_A(profile.data[b1], profile.data[b2])
+
+    print(f"Hamming distance: {distance}")
+
 operations = {
     "help": help,
     "reset": reset,
     "profile": profile,
-    "listprofiles": listprofiles,
+    "listp": listp,
     "show": show,
     "candidatedistance": candidatedistance,
     "phisquare": phisquare,
     "evolphisquare": evolphisquare,
+    "hamming": hamming,
     "exit": None
 }
 
@@ -144,11 +171,12 @@ descriptions = {
     "help": "Print this help paragraph.",
     "reset": "Erase all previously saved profiles.",
     "profile": "Generate & save A or L profile with the wanted candidates, voters numbers & polarisation.",
-    "listprofiles": "List the previously created profiles.",
+    "listp": "List the previously created profiles.",
     "show": "Display a particular saved profile.",
     "candidatedistance": "Display the preference distance between every pair of candidate of a particular profile, as defined in question 3.",
     "phisquare": "Compute the phi square distance of a profile as defined in question 5.",
     "evolphisquare": "Graph the evolution of the Phi² polarisation measure as a function of our own polarisation generation parameter.",
+    "hamming": "Compute the Hamming distance between two ballots of an approval profile.",
     "exit": "Exit the menu, stop the program."
 }
 
