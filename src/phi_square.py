@@ -1,7 +1,7 @@
 from math import comb
 import numpy as np 
 import matplotlib.pyplot as plt
-import Projet_Decision.src.Distances as ds
+import Distances as ds
 
 
 # Question 5 ------------------------------------------------------------------------------------------------------------------------------------------------------
