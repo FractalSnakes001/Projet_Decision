@@ -86,7 +86,7 @@ def listp():
 
 def show():
     index, p = choose_profile()
-    print(f"Profile {index}. Type: {"APPROVAL" if p.type == "a" else "TOTAL ORDERING"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
+    print(f"Profile {index}. Type: {'APPROVAL' if p.type == 'a' else 'TOTAL ORDERING'} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
     for v in p.data:
         for c in v:
             print(c, end=" ")
@@ -109,15 +109,23 @@ def phisquare():
 def evolphisquare():
     print("Candidate number ? ", end="")
     c = int(input())
+    
     print("Voter number ? ", end="")
     v = int(input())
+    
     print("Profile type ? [A | L] ", end="")
     t = input()
-    if c < 1 or v < 1 or (t not in ["A", "L"]):
+    
+    print("Polarization step (ex: 0.1) ? ", end="")
+    pas = float(input())
+    
+    print("Repetitions per point ? ", end="")
+    rep = int(input())
+    
+    if c < 1 or v < 1 or (t not in ["A", "L"]) or pas <= 0 or pas > 1 or rep < 1:
         print("Error: wrong argument(s).")
         return
-    
-    evol_phi_square_A(v, c) if t == "A" else evol_phi_square_L(v, c)
+    evol_phi_square_A(v, c, pas, rep) if t == "A" else evol_phi_square_L(v, c, pas, rep)
 
 def hamming():
     index, profile = choose_profile()
@@ -163,7 +171,7 @@ def consensus():
     index, profile = choose_profile()
     (score, ballot) = Calcul_U1_TypeA(profile.data) if profile.type == "a" else Calcul_U1_TypeL(profile.data)
 
-    print(f"Minimum cumulated {"Hamming" if profile.type == "a" else "Spearman"} distance: {score}")
+    print(f"Minimum cumulated {'Hamming' if profile.type == 'a' else 'Spearman'} distance: {score}")
     print("Consensus ballot: ", end="")
     for i in ballot:
         print(i, end=" ")
@@ -172,7 +180,7 @@ def consensus():
 def consensuscluster():
     index, profile = choose_profile()
     (score, clusters) = Calcul_U2_TypeA(profile.data) if profile.type == "a" else Calcul_U2_TypeL(profile.data)
-    print(f"u2* minimum cumulated {"Hamming" if profile.type == "a" else "Spearman"} distance by cluster: {score}")
+    print(f"u2* minimum cumulated {'Hamming' if profile.type == 'a' else 'Spearman'} distance by cluster: {score}")
     for k in range(1, len(clusters)+1):
         print(f"Cluster {k}:")
         for i in clusters[k-1]:
