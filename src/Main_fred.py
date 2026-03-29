@@ -7,7 +7,7 @@ from itertools import combinations
 from Generation import *
 from Distances import *
 from phi_square import *
-import Polarisation as Polar
+from Polarisation import *
 
 @dataclass
 class Profile:
@@ -180,6 +180,23 @@ def spearman():
 
     print(f"Spearman distance: {distance}")
 
+def consensus():
+    print("Profile index: ", end="")
+    index = int(input())
+    if index >= len(profiles) or 0 > index:
+        print("Error: wrong argument(s). Index out of range.")
+        return
+    
+    profile = profiles[index]
+
+    (score, ballot) = Calcul_U1_TypeA(profile.data) if profile.type == "a" else Calcul_U1_TypeL(profle.data)
+
+    print(f"Minimum cumulated {"Hamming" if profile.type == "a" else "Spearman"} distance: {score}")
+    print("Consensus ballot: ", end="")
+    for i in ballot:
+        print(ballot[i], end=" ")
+    print()
+
 operations = {
     "help": help,
     "reset": reset,
@@ -191,6 +208,7 @@ operations = {
     "evolphisquare": evolphisquare,
     "hamming": hamming,
     "spearman": spearman,
+    "consensus": consensus,
     "exit": None
 }
 
@@ -205,6 +223,7 @@ descriptions = {
     "evolphisquare": "Graph the evolution of the Phi² polarisation measure as a function of our own polarisation generation parameter.",
     "hamming": "Compute the Hamming distance between two ballots of an approval profile.",
     "spearman": "Compute the Spearman distance between two ballots of a total ordering profile.",
+    "consensus": "Compute the consensus, a ballot that minimizes its cumulated Hamming/Spearman distance to a profile.",
     "exit": "Exit the menu, stop the program."
 }
 
