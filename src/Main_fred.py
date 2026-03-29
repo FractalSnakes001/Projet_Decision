@@ -1,8 +1,6 @@
-import numpy as np
-import math
-import sys
+# while loop based command line menu, wrappers for implementations
+
 from dataclasses import dataclass
-import matplotlib.pyplot as plt
 from itertools import combinations
 from Generation import *
 from Distances import *
@@ -31,10 +29,7 @@ def choose_profile():
             print("Error: wrong argument(s). Index out of range.")
         else:
             ok = True
-
-        p = profiles[index]
-
-    return index, p
+            return index, profiles[index]
 
 def help():
     max = -1
@@ -109,7 +104,7 @@ def candidatedistance():
 def phisquare():
     index, profile = choose_profile()
     distance = computePhiSquare_A(profile.data) if profile.type == "a" else computePhiSquare_L(profile.data)
-    print(f"Phi² distance of profile no. {index}: {distance}")
+    print(f"Phi² distance of profile no. {index}: {round(distance, 2)}")
 
 def evolphisquare():
     print("Candidate number ? ", end="")
@@ -184,6 +179,11 @@ def consensuscluster():
             print(i, end=" ")
         print()
 
+def polarisation():
+    index, profile = choose_profile()
+    result = Polarisation_TypeA(profile.data) if profile.type == "a" else Polarisation_TypeL(profile.data)
+    print(f"Polarisation: {round(result, 2)}")
+
 
 operations = {
     "help": help,
@@ -198,6 +198,7 @@ operations = {
     "spearman": spearman,
     "consensus": consensus,
     "consensuscluster": consensuscluster,
+    "polarisation": polarisation,
     "exit": None
 }
 
@@ -214,6 +215,7 @@ descriptions = {
     "spearman": "Compute the Spearman distance between two ballots of a total ordering profile.",
     "consensus": "Compute the consensus, a ballot that minimizes its cumulated Hamming/Spearman distance to a profile.",
     "consensuscluster": "Compute an approximation of an optimal ballot pair, representing the best two profile clusters.",
+    "polarisation": "Compute the final phi polarisation measure of a profile.",
     "exit": "Exit the menu, stop the program."
 }
 
