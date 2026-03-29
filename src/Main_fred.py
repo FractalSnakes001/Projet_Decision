@@ -21,6 +21,21 @@ class Profile:
 
 profiles = list()
 
+def choose_profile():
+    ok = False
+    while not ok:
+        print("Profile index: ", end="")
+        index = int(input())
+
+        if index >= len(profiles) or 0 > index:
+            print("Error: wrong argument(s). Index out of range.")
+        else:
+            ok = True
+
+        p = profiles[index]
+
+    return index, p
+
 def help():
     max = -1
     for s in descriptions:
@@ -75,14 +90,7 @@ def listp():
         print(f"Profile {i}. Type: {p.type} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
 
 def show():
-    print("Profile index: ", end="")
-    index = int(input())
-
-    if index >= len(profiles) or 0 > index:
-        print("Error: wrong argument(s). Index out of range.")
-        return
-
-    p = profiles[index]
+    index, p = choose_profile()
     print(f"Profile {index}. Type: {"APPROVAL" if p.type == "a" else "TOTAL ORDERING"} | C: {p.c} | V: {p.v} | Polarisation: {p.p}")
     for v in p.data:
         for c in v:
@@ -90,14 +98,8 @@ def show():
         print()
 
 def candidatedistance():
-    print("Profile index: ", end="")
-    index = int(input())
-    if index >= len(profiles) or 0 > index:
-        print("Error: wrong argument(s). Index out of range.")
-        return
+    index, profile = choose_profile()
 
-    profile = profiles[index]
-    
     print("Candidate A" + " " * 4 + "Candidate B" + " " * 4 + "Distance between A and B")
 
     for (c1, c2) in combinations(range(1, profile.c + 1), 2):
@@ -105,13 +107,7 @@ def candidatedistance():
         print(c1, " "*14, c2, " "*14, distance, sep="")
 
 def phisquare():
-    print("Profile index: ", end="")
-    index = int(input())
-    if index >= len(profiles) or 0 > index:
-        print("Error: wrong argument(s). Index out of range.")
-        return
-
-    profile = profiles[index]
+    index, profile = choose_profile()
     distance = computePhiSquare_A(profile.data) if profile.type == "a" else computePhiSquare_L(profile.data)
     print(f"Phi² distance of profile no. {index}: {distance}")
 
@@ -129,13 +125,7 @@ def evolphisquare():
     evol_phi_square_A(v, c) if t == "A" else evol_phi_square_L(v, c)
 
 def hamming():
-    print("Profile index: ", end="")
-    index = int(input())
-    if index >= len(profiles) or 0 > index:
-        print("Error: wrong argument(s). Index out of range.")
-        return
-    
-    profile = profiles[index]
+    index, profile = choose_profile()
 
     if profile.type != "a":
         print("Error: the profile needs to be of type approval in order to compute Hamming distances in it.")
@@ -155,13 +145,7 @@ def hamming():
     print(f"Hamming distance: {distance}")
 
 def spearman():
-    print("Profile index: ", end="")
-    index = int(input())
-    if index >= len(profiles) or 0 > index:
-        print("Error: wrong argument(s). Index out of range.")
-        return
-    
-    profile = profiles[index]
+    index, profile = choose_profile()
 
     if profile.type != "l":
         print("Error: the profile needs to be of type approval in order to compute Spearman distances in it.")
@@ -181,21 +165,25 @@ def spearman():
     print(f"Spearman distance: {distance}")
 
 def consensus():
-    print("Profile index: ", end="")
-    index = int(input())
-    if index >= len(profiles) or 0 > index:
-        print("Error: wrong argument(s). Index out of range.")
-        return
-    
-    profile = profiles[index]
-
-    (score, ballot) = Calcul_U1_TypeA(profile.data) if profile.type == "a" else Calcul_U1_TypeL(profle.data)
+    index, profile = choose_profile()
+    (score, ballot) = Calcul_U1_TypeA(profile.data) if profile.type == "a" else Calcul_U1_TypeL(profile.data)
 
     print(f"Minimum cumulated {"Hamming" if profile.type == "a" else "Spearman"} distance: {score}")
     print("Consensus ballot: ", end="")
     for i in ballot:
-        print(ballot[i], end=" ")
+        print(i, end=" ")
     print()
+
+def consensuscluster():
+    index, profile = choose_profile()
+    (score, clusters) = Calcul_U2_TypeA(profile.data) if profile.type == "a" else Calcul_U2_TypeL(profile.data)
+    print(f"u2* minimum cumulated {"Hamming" if profile.type == "a" else "Spearman"} distance by cluster: {score}")
+    for k in range(1, len(clusters)+1):
+        print(f"Cluster {k}:")
+        for i in clusters[k-1]:
+            print(i, end=" ")
+        print()
+
 
 operations = {
     "help": help,
@@ -209,6 +197,7 @@ operations = {
     "hamming": hamming,
     "spearman": spearman,
     "consensus": consensus,
+    "consensuscluster": consensuscluster,
     "exit": None
 }
 
@@ -224,6 +213,7 @@ descriptions = {
     "hamming": "Compute the Hamming distance between two ballots of an approval profile.",
     "spearman": "Compute the Spearman distance between two ballots of a total ordering profile.",
     "consensus": "Compute the consensus, a ballot that minimizes its cumulated Hamming/Spearman distance to a profile.",
+    "consensuscluster": "Compute an approximation of an optimal ballot pair, representing the best two profile clusters.",
     "exit": "Exit the menu, stop the program."
 }
 
