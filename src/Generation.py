@@ -69,7 +69,7 @@ def random_type_L(nb_V, nb_C, Pol):
         profil : liste (non Numpy) de bulletins donc N elements de L.
 
     """
-    # 1. Vecteur de reference V1 (rangs de 1 a m)
+    #Vecteur de reference V1 (rangs de 1 a m)
     V1 = np.random.permutation(np.arange(1, nb_C + 1))
     V2 = nb_C + 1 - V1  # Bulletin opposé
     profil = []

@@ -282,19 +282,19 @@ def Polarisation_TypeL(profilL, max_iter=50):
     if M < 2:
         return None
         
-    # 1. Calcul de u1* via le graphe biparti (Hongrois)
+    # Calcul de u1* via le graphe biparti (Hongrois)
     u1_res = Calcul_U1_TypeL(profilL)
     if u1_res[0] is None:
         return None
     u1_etoile = u1_res[0]
     
-    # 2. Calcul de u2* via K-means sur la distance de Spearman
+    # Calcul de u2* via K-means sur la distance de Spearman
     u2_res = Calcul_U2_TypeL(profilL, max_iter)
     if u2_res[0] is None:
         return None
     u2_etoile = u2_res[0]
     
-    # 3. Application de la formule mathematique
+    # Application de la formule mathematique
     phi = (4.0 / (N * M * M)) * (u1_etoile - u2_etoile)
     
     return phi
@@ -340,7 +340,7 @@ def Evaluer_Polarisation(N=100, M=10, pas=0.05, nb_simuls=10):
             somme_phi_A += phi_A if phi_A is not None else 0
             somme_phi_L += phi_L if phi_L is not None else 0
             
-        # 3. Moyenne des resultats 
+        #  Moyenne des resultats 
         resultats_A.append(somme_phi_A / nb_simuls)
         resultats_L.append(somme_phi_L / nb_simuls)
         
