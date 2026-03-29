@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from itertools import combinations
 from Generation import *
 from Distances import *
+from phi_square import *
 import Polarisation as Polar
 
 @dataclass
@@ -20,10 +21,7 @@ class Profile:
 
 profiles = list()
 
-
-
 def help():
-    
     max = -1
     for s in descriptions:
         max = len(s) if len(s) > max else max
@@ -35,7 +33,6 @@ def help():
 def reset():
     profiles.clear()
     print("Profiles cleared.")
-
 
 def profile():
     args = list()
@@ -107,6 +104,30 @@ def candidatedistance():
         distance = abs(NombrePreferance(profile.data, c1-1, c2-1, profile.v, profile.type.upper()) - NombrePreferance(profile.data, c2-1, c1-1, profile.v, profile.type.upper()))
         print(c1, " "*14, c2, " "*14, distance, sep="")
 
+def phisquare():
+    print("Profile number: ", end="")
+    index = int(input())
+    if index >= len(profiles) or 0 > index:
+        print("Error: wrong argument(s). Index out of range.")
+        return
+
+    profile = profiles[index]
+    distance = computePhiSquare_A(profile.data) if profile.type == "a" else computePhiSquare_L(profile.data)
+    print(f"Phi² distance of profile no. {index}: {distance}")
+
+def evolphisquare():
+    print("Candidate number ? ", end="")
+    c = int(input())
+    print("Voter number ? ", end="")
+    v = int(input())
+    print("Profile type ? [A | L] ", end="")
+    t = input()
+    if c < 1 or v < 1 or (t not in ["A", "L"]):
+        print("Error: wrong argument(s).")
+        return
+    
+    evol_phi_square_A(v, c) if t == "A" else evol_phi_square_L(v, c)
+
 operations = {
     "help": help,
     "reset": reset,
@@ -114,6 +135,8 @@ operations = {
     "listprofiles": listprofiles,
     "show": show,
     "candidatedistance": candidatedistance,
+    "phisquare": phisquare,
+    "evolphisquare": evolphisquare,
     "exit": None
 }
 
@@ -124,6 +147,8 @@ descriptions = {
     "listprofiles": "List the previously created profiles.",
     "show": "Display a particular saved profile.",
     "candidatedistance": "Display the preference distance between every pair of candidate of a particular profile, as defined in question 3.",
+    "phisquare": "Compute the phi square distance of a profile as defined in question 5.",
+    "evolphisquare": "Graph the evolution of the Phi² polarisation measure as a function of our own polarisation generation parameter.",
     "exit": "Exit the menu, stop the program."
 }
 
